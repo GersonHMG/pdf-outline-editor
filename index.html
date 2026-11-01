@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF Outline Editor</title>
+  <meta name="description" content="View and edit a PDF's outline (bookmarks / table of contents) as JSON, entirely in your browser.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>PDF Outline Editor</h1>
+    <p class="sub">View and edit a PDF's bookmarks as JSON. Everything runs in your browser — the file is never uploaded.</p>
+  </header>
+
+  <main>
+    <label id="drop" class="drop">
+      <input id="file" type="file" accept="application/pdf,.pdf" hidden>
+      <span id="drop-text"><strong>Choose a PDF</strong> or drop it here</span>
+    </label>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+
+    <section class="panes">
+      <div class="pane">
+        <div class="pane-head">
+          <h2>Outline</h2>
+          <span id="count" class="muted"></span>
+        </div>
+        <div id="tree" class="tree"><p class="muted">Load a PDF to see its outline.</p></div>
+      </div>
+
+      <div class="pane">
+        <div class="pane-head">
+          <h2>JSON</h2>
+          <div class="btns">
+            <button id="format" type="button" disabled>Format</button>
+            <button id="reset" type="button" disabled>Reset</button>
+            <button id="copy" type="button" disabled>Copy</button>
+            <button id="dl-json" type="button" disabled>Save .json</button>
+            <label class="btn" id="load-json-label" aria-disabled="true">Load .json<input id="load-json" type="file" accept="application/json,.json" hidden disabled></label>
+          </div>
+        </div>
+        <textarea id="json" spellcheck="false" disabled placeholder='[
+  { "title": "Chapter 1", "page": 1, "children": [
+    { "title": "Section 1.1", "page": 2 }
+  ]}
+]'></textarea>
+        <div id="errors" class="errors"></div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button id="apply" class="primary" type="button" disabled>Apply outline &amp; download PDF</button>
+    </div>
+
+    <details class="help">
+      <summary>JSON format</summary>
+      <p>An array of entries. Each entry has:</p>
+      <ul>
+        <li><code>title</code> (string, required)</li>
+        <li><code>page</code> (1-based page number) <em>or</em> <code>url</code> (external link)</li>
+        <li><code>children</code> (array of entries, optional)</li>
+        <li><code>open</code> (boolean, optional — expand this entry by default)</li>
+      </ul>
+      <p>An empty array <code>[]</code> removes the outline.</p>
+    </details>
+  </main>
+
+  <footer class="muted">Built with <a href="https://mozilla.github.io/pdf.js/">PDF.js</a> and <a href="https://pdf-lib.js.org/">pdf-lib</a>.</footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
